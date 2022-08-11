@@ -485,3 +485,25 @@ class CustomDataset(Dataset):
             })
 
         return eval_results
+
+    def get_gt_statistics(self):
+
+        for idx, img_info in enumerate(self.img_infos):
+
+            filename = osp.join(self.data_root, self.ann_dir, img_info['ann']['seg_map'])
+
+            img_bytes = self.file_client.get(filename)
+            gt_semantic_seg = mmcv.imfrombytes(
+            img_bytes, flag='unchanged').squeeze().astype(np.uint8)
+
+            self.img_infos[idx]['ann']['class_info'] = np.unique(gt_semantic_seg)
+
+    
+
+
+            
+            
+            
+
+
+

@@ -12,6 +12,7 @@ from mmcv.utils import Registry, build_from_cfg, digit_version
 from torch.utils.data import DataLoader
 
 from .samplers import DistributedSampler
+from .samplers import ClassUniformSampler
 
 if platform.system() != 'Windows':
     # https://github.com/pytorch/pytorch/issues/973
@@ -97,6 +98,7 @@ def build_dataloader(dataset,
                      drop_last=False,
                      pin_memory=True,
                      persistent_workers=True,
+                     sampler=None,
                      **kwargs):
     """Build PyTorch DataLoader.
 
@@ -129,12 +131,25 @@ def build_dataloader(dataset,
         DataLoader: A PyTorch dataloader.
     """
     rank, world_size = get_dist_info()
+
     if dist:
-        sampler = DistributedSampler(
-            dataset, world_size, rank, shuffle=shuffle, seed=seed)
-        shuffle = False
-        batch_size = samples_per_gpu
-        num_workers = workers_per_gpu
+        if (sampler == 'ClassUniformSampler') & (dataset.test_mode == False):
+            print("You are using ClassUniformSampler")
+            sampler = ClassUniformSampler(
+                dataset, world_size, rank, shuffle=shuffle, seed=seed)
+            shuffle = False
+            batch_size = samples_per_gpu
+            num_workers = workers_per_gpu
+
+        else :
+            print("You are using DistributedSampler")
+            sampler = DistributedSampler(
+                dataset, world_size, rank, shuffle=shuffle, seed=seed)
+            shuffle = False
+            batch_size = samples_per_gpu
+            num_workers = workers_per_gpu
+        
+
     else:
         sampler = None
         batch_size = num_gpus * samples_per_gpu
