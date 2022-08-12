@@ -12,6 +12,13 @@ def cityscapes_classes():
     ]
 
 
+def cityscapes_single_class():
+    """Cityscapes single class for external use."""
+    return [
+        'background', 'object'
+    ]
+
+
 def ade_classes():
     """ADE20K class names for external use."""
     return [
@@ -124,6 +131,10 @@ def isaid_classes():
 def stare_classes():
     """stare class names for external use."""
     return ['background', 'vessel']
+
+def cityscapes_single_class_palette():
+    """Cityscapes single class palette for external use."""
+    return [[0, 0, 0], [255, 0, 0]]
 
 
 def cityscapes_palette():
@@ -266,6 +277,7 @@ def stare_palette():
 
 
 dataset_aliases = {
+    'cityscapes_single_class': ['cityscapes_single_class'],
     'cityscapes': ['cityscapes'],
     'ade': ['ade', 'ade20k'],
     'voc': ['voc', 'pascal_voc', 'voc12', 'voc12aug'],
