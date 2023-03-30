@@ -98,6 +98,36 @@ def inference_segmentor(model, img):
         result = model(return_loss=False, rescale=True, **data)
     return result
 
+def inference_segmentor_sw(model, img, window_size=1024, overlap=0.):
+    """Inference image(s) with the segmentor in sliding window manner.
+
+    Args:
+        model (nn.Module): The loaded segmentor.
+        img (str/ndarray): Either image file or loaded image.
+        window_size (int): Window size for sliding window
+        overlap   (float): Overlap ratio
+
+    Returns:
+        (list[ndarray]): The segmentation result.
+    """
+    import slidingwindow as sw 
+    import numpy as np 
+
+    if isinstance(img, str):
+        img = mmcv.imread(img, channel_order='rgb', backend='cv2')
+
+    # Generate the set of windows, with a 256-pixel max window size and 50% overlap
+    windows = sw.generate(img, sw.DimOrder.HeightWidthChannel, window_size, overlap)
+    result = np.zeros((img.shape[0:2]), dtype=np.uint8)
+
+    # Do stuff with the generated windows
+    for window in mmcv.track_iter_progress(windows):
+        img_subset = img[window.indices()]
+        result_subset = inference_segmentor(model, img_subset)
+        result[window.indices()] = result_subset[0]
+
+    return [result]
+
 
 def show_result_pyplot(model,
                        img,
