@@ -654,6 +654,60 @@ class RandomCrop(object):
 
 
 @PIPELINES.register_module()
+class DilateAnnotations(object):
+    """Dilate annotations with arrow area 
+
+    Args: 
+        num_class (int): number of classes in dataset
+        class_to_dialte (list[int]): class for dilation
+        kernel_size (int): kernel size for dilation
+        num_iter (int): num_iter
+    """
+    def __init__(self, num_class, class_to_dialte, kernel_size=5):
+        self.num_class = num_class
+        self.class_to_dialte = class_to_dialte
+        self.kernel_size = kernel_size
+    
+    def __call__(self, results):
+        import cv2
+        """Call function to dialate semantic segmentation maps.
+
+        Args:
+            results (dict): Result dict from loading pipeline.
+
+        Returns:
+            dict: Dilated results.
+        """
+        
+        for key in results.get('seg_fields', []):
+            dilate_result = np.zeros_like(results[key])
+
+            for class_idx in reversed(range(1, self.num_class)):
+                
+                label_map = np.zeros_like(dilate_result)
+                label_map[results[key] == class_idx] = 1
+
+                if class_idx in self.class_to_dialte: 
+                    kernel = np.ones((self.kernel_size, self.kernel_size), np.uint8)
+                    label_map = cv2.dilate(label_map, kernel)
+                
+                dilate_result[label_map==1] = class_idx
+
+            results[key] = dilate_result
+            
+
+        return results
+        
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += f'(num_class={self.num_class}, ' \
+                    f'class_to_dialte={self.class_to_dialte}, ' \
+                    f'kernel_size={self.kernel_size})'
+        return repr_str
+
+    
+@PIPELINES.register_module()
 class RandomRotate(object):
     """Rotate the image & seg.
 
