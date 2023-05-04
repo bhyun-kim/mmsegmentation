@@ -8,6 +8,34 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Analyze Json Log')
+    parser.add_argument(
+        'json_logs',
+        type=str,
+        nargs='+',
+        help='path of train log in json format')
+    parser.add_argument(
+        '--keys',
+        type=str,
+        nargs='+',
+        default=['mIoU'],
+        help='the metric that you want to plot')
+    parser.add_argument('--title', type=str, help='title of figure')
+    parser.add_argument(
+        '--legend',
+        type=str,
+        nargs='+',
+        default=None,
+        help='legend of each plot')
+    parser.add_argument(
+        '--backend', type=str, default=None, help='backend of plt')
+    parser.add_argument(
+        '--style', type=str, default='dark', help='style of plt')
+    parser.add_argument('--out', type=str, default=None)
+    args = parser.parse_args()
+    return args
+
 
 def plot_curve(log_dicts, args):
     if args.backend is not None:
@@ -66,33 +94,7 @@ def plot_curve(log_dicts, args):
         plt.cla()
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Analyze Json Log')
-    parser.add_argument(
-        'json_logs',
-        type=str,
-        nargs='+',
-        help='path of train log in json format')
-    parser.add_argument(
-        '--keys',
-        type=str,
-        nargs='+',
-        default=['mIoU'],
-        help='the metric that you want to plot')
-    parser.add_argument('--title', type=str, help='title of figure')
-    parser.add_argument(
-        '--legend',
-        type=str,
-        nargs='+',
-        default=None,
-        help='legend of each plot')
-    parser.add_argument(
-        '--backend', type=str, default=None, help='backend of plt')
-    parser.add_argument(
-        '--style', type=str, default='dark', help='style of plt')
-    parser.add_argument('--out', type=str, default=None)
-    args = parser.parse_args()
-    return args
+
 
 
 def load_json_logs(json_logs):
