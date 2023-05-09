@@ -13,7 +13,7 @@ evaluation = dict(interval=4000, metric='mIoU')
 
 # dataset settings
 dataset_type = 'CityscapesDataset_Crack'
-data_root = 'C:/Users/tls15/UOS-SSaS Dropbox/05. Data/02. Training&Test/012. General_Crack/01. Positive Samples/v0.1.2'
+data_root = 'C:/Users/tls15/UOS-SSaS Dropbox/05. Data/02. Training&Test/012. General_Crack/v0.1.2'
 img_norm_cfg = dict(
     mean=[72.39239876, 82.90891754, 73.15835921], std=[1, 1, 1], to_rgb=True)
 crop_size = (2048, 2048)

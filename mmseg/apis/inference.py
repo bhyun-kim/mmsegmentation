@@ -169,3 +169,31 @@ def show_result_pyplot(model,
     plt.show(block=block)
     if out_file is not None:
         mmcv.imwrite(img, out_file)
+
+def save_result_palette(model,
+                        img,
+                        result,
+                        palette=None,
+                        opacity=0.5,
+                        out_file=None):
+    """Save the segmentation results.
+
+    Args:
+        model (nn.Module): The loaded segmentor.
+        img (str or np.ndarray): Image filename or loaded image.
+        result (list): The segmentation result.
+        palette (list[list[int]]] | None): The palette of segmentation
+            map. If None is given, random palette will be generated.
+            Default: None
+        opacity(float): Opacity of painted segmentation map.
+            Default 0.5.
+            Must be in (0, 1] range.
+        out_file (str or None): The path to write the image.
+            Default: None.
+    """
+    if hasattr(model, 'module'):
+        model = model.module
+    img = model.show_result(
+        img, result, palette=palette, show=False, opacity=opacity)
+    if out_file is not None:
+        mmcv.imwrite(img, out_file)

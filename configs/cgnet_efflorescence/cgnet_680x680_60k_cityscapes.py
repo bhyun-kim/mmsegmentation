@@ -1,5 +1,7 @@
-_base_ = ['../_base_/models/cgnet_sc.py', '../_base_/datasets/cityscapes_2048x2048_crack.py', 
-          '../_base_/default_runtime.py']
+_base_ = [
+    '../_base_/models/cgnet.py', '../_base_/datasets/cityscapes.py',
+    '../_base_/default_runtime.py'
+]
 
 # optimizer
 optimizer = dict(type='Adam', lr=0.001, eps=1e-08, weight_decay=0.0005)
@@ -11,19 +13,15 @@ total_iters = 60000
 checkpoint_config = dict(by_epoch=False, interval=4000)
 evaluation = dict(interval=4000, metric='mIoU')
 
-# dataset settings
-dataset_type = 'CityscapesDataset_Crack'
-data_root = 'C:/Users/tls15/UOS-SSaS Dropbox/05. Data/02. Training&Test/012. General_Crack/01. Positive Samples/v0.1.2'
 img_norm_cfg = dict(
     mean=[72.39239876, 82.90891754, 73.15835921], std=[1, 1, 1], to_rgb=True)
-crop_size = (2048, 2048)
+crop_size = (680, 680)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
-    dict(type='Resize', img_scale=(4096, 2048), ratio_range=(0.5, 2.0)),
-    dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.75),
+    dict(type='Resize', img_scale=(2048, 1024), ratio_range=(0.5, 2.0)),
+    dict(type='RandomCrop', crop_size=crop_size),
     dict(type='RandomFlip', flip_ratio=0.5),
-    dict(type='PhotoMetricDistortion'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size=crop_size, pad_val=0, seg_pad_val=255),
     dict(type='DefaultFormatBundle'),
@@ -33,7 +31,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(2048, 2048),
+        img_scale=(2048, 1024),
         # img_ratios=[0.5, 0.75, 1.0, 1.25, 1.5, 1.75],
         flip=False,
         transforms=[
@@ -47,21 +45,6 @@ test_pipeline = [
 data = dict(
     samples_per_gpu=8,
     workers_per_gpu=4,
-    train=dict(
-        type=dataset_type,
-        data_root=data_root,
-        img_dir='leftImg8bit/train',
-        ann_dir='gtFine/train',
-        pipeline=train_pipeline),
-    val=dict(
-        type=dataset_type,
-        data_root=data_root,
-        img_dir='leftImg8bit/val',
-        ann_dir='gtFine/val',
-        pipeline=test_pipeline),
-    test=dict(
-        type=dataset_type,
-        data_root=data_root,
-        img_dir='leftImg8bit/test',
-        ann_dir='gtFine/test',
-        pipeline=test_pipeline))
+    train=dict(pipeline=train_pipeline),
+    val=dict(pipeline=test_pipeline),
+    test=dict(pipeline=test_pipeline))

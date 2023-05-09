@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'CityscapesDataset_Crack'
-data_root = 'C:/Users/tls15/UOS-SSaS Dropbox/05. Data/02. Training&Test/012. General_Crack/v0.1.2'
+data_root = 'C:/Users/tls15/UOS-SSaS Dropbox/05. Data/02. Training&Test/012. General_Crack/01. Positive Samples/v0.1.2'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 crop_size = (2048, 2048)
@@ -49,6 +49,6 @@ data = dict(
     test=dict(
         type=dataset_type,
         data_root=data_root,
-        img_dir='leftImg8bit/val',
-        ann_dir='gtFine/val',
+        img_dir='leftImg8bit/test',
+        ann_dir='gtFine/test',
         pipeline=test_pipeline))
