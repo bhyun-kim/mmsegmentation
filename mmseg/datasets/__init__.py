@@ -10,6 +10,12 @@ from .custom import CustomDataset
 from .dark_zurich import DarkZurichDataset
 from .dataset_wrappers import (ConcatDataset, MultiImageMixDataset,
                                RepeatDataset)
+
+from .cityscapes_sc_crack import CityscapesDataset_Crack
+from .cityscapes_sc_efflorescence import CityscapesDataset_Efflorescence
+from .cityscapes_sc_rebarexposure import CityscapesDataset_RebarExposure
+from .cityscapes_sc_spalling import CityscapesDataset_Spalling
+
 from .drive import DRIVEDataset
 from .hrf import HRFDataset
 from .isaid import iSAIDDataset
@@ -21,6 +27,8 @@ from .potsdam import PotsdamDataset
 from .stare import STAREDataset
 from .voc import PascalVOCDataset
 
+
+
 __all__ = [
     'CustomDataset', 'build_dataloader', 'ConcatDataset', 'RepeatDataset',
     'DATASETS', 'build_dataset', 'PIPELINES', 
@@ -29,5 +37,6 @@ __all__ = [
     'PascalContextDataset59', 'ChaseDB1Dataset', 'DRIVEDataset', 'HRFDataset',
     'STAREDataset', 'DarkZurichDataset', 'NightDrivingDataset',
     'COCOStuffDataset', 'LoveDADataset', 'MultiImageMixDataset',
-    'iSAIDDataset', 'ISPRSDataset', 'PotsdamDataset'
+    'iSAIDDataset', 'ISPRSDataset', 'PotsdamDataset', 
+    'CityscapesDataset_Crack', 'CityscapesDataset_Efflorescence', 'CityscapesDataset_RebarExposure', 'CityscapesDataset_Spalling'
 ]
